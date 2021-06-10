@@ -1,0 +1,91 @@
+@startuml
+
+Account <-- Player
+Player <-- Game
+DiceCup <-- Game
+GameBoard <-- Game
+ChanceCard <-- Game
+
+class GameBoard
+{
+    private GUI_Field[] fields;
+    public void setField()
+    public GUI_Field getField()
+    public String toString()
+}
+
+class ChanceCard
+{
+    private GUI_Chance[] cards;
+    public void setCard()
+    public GUI_Field getCard()
+    public String toString()
+}
+
+class Game
+{
+    private Player[] players;
+    private final DiceCup dice;
+    private final Scanner input;
+    private GUI gui;
+    private Player currentPlayer;
+    private boolean gameOver;
+
+    public Game()
+    public Game(String playerName1, String playerName2)
+
+    public boolean isGameOver()
+    public void close()
+    public void rollDice()
+    public void turn(Player player)
+    public void gameOver()
+    public void endGame()
+    public Player getCurrentPlayer()
+    public void changePlayer()
+    public void movePlayer(Player player, int roll)
+}
+
+class DiceCup
+{
+    private final Random
+    private int dice1
+    private int dice2
+
+    public void rollDice()
+    public int getDice1()
+    public int getDice2()
+    public int getSum()
+    public boolean isSimiliar()
+    public boolean twoOne()
+    public int random(int value)
+}
+
+class Player
+{
+
+    private Account account;
+    private String playerName;
+    private GUI_Player gui_player;
+
+    public Player(GUI gui)
+    public Player(String playerName)
+    public String getName()
+    public int getPoints()
+    public void addPoints(int points)
+    public GUI_Player getGuiPlayer()
+
+}
+
+class Account {
+    private int balance;
+
+    public Account(int balance)
+    public Account()
+
+    public int withdraw(int amount)
+    public boolean deposit(int amount)
+    public String toString()
+    public int getBalance()
+
+}
+@enduml
