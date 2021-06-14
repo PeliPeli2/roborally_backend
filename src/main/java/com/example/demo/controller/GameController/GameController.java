@@ -58,6 +58,8 @@ public class GameController {
         Board board = gameService.getBoard(boardId);
         Player player = dtoMapper.convertToEntity(playerDto, board);
         int playerId = gameService.addPlayer(boardId, player);
+        gameService.setCurrentPlayer(boardId, playerId);
+        gameService.moveCurrentPlayer(boardId,playerDto.getX(), playerDto.getY());
         return new ResponseEntity<>(playerId, HttpStatus.CREATED);
     }
 
