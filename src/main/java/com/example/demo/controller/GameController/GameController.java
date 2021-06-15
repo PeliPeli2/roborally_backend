@@ -56,11 +56,24 @@ public class GameController {
     @PostMapping("/board/{boardId}/player")
     public ResponseEntity<Integer> addPlayer(@PathVariable("boardId") int boardId, @RequestBody PlayerDto playerDto) throws ServiceException, MappingException, DaoException {
         Board board = gameService.getBoard(boardId);
-        Player player = dtoMapper.convertToEntity(playerDto, board);
-        int playerId = gameService.addPlayer(boardId, player);
-        gameService.setCurrentPlayer(boardId, playerId);
-        gameService.moveCurrentPlayer(boardId,playerDto.getX(), playerDto.getY());
-        return new ResponseEntity<>(playerId, HttpStatus.CREATED);
+        if (board.getSpace(playerDto.getX(), playerDto.getY()).getPlayer() == null && board.getPlayersNumber() < 6) {
+            for (int i = 0; i < board.getPlayersNumber(); i++) {
+                if (playerDto.getPlayerName().equalsIgnoreCase(board.getPlayer(i).getName())) {
+                    return new ResponseEntity<>(boardId, HttpStatus.BAD_REQUEST);
+                }
+                else if (playerDto.getPlayerColor().equalsIgnoreCase(board.getPlayer(i).getColor())){
+                    return new ResponseEntity<>(boardId, HttpStatus.BAD_REQUEST);
+                }
+            }
+                Player player = dtoMapper.convertToEntity(playerDto, board);
+                int playerId = gameService.addPlayer(boardId, player);
+                gameService.setCurrentPlayer(boardId, playerId);
+                gameService.moveCurrentPlayer(boardId, playerDto.getX(), playerDto.getY());
+                return new ResponseEntity<>(playerId, HttpStatus.CREATED);
+            }
+        else {
+            return new ResponseEntity<>(boardId, HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**

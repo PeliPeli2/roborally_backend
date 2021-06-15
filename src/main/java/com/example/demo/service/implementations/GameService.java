@@ -96,8 +96,8 @@ public class GameService implements IGameService {
     }
 
     @Override
-    public int addPlayer(int boardId, Player player) throws ServiceException, DaoException {
-        if (player == null) {
+    public int addPlayer(int boardId, Player player ) throws ServiceException, DaoException {
+        if (player == null ) {
             throw new ServiceException("Player to add to board was null", HttpStatus.BAD_REQUEST);
         }
         Board board = this.getBoard(boardId);
