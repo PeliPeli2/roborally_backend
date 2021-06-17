@@ -54,25 +54,25 @@ public class GameController {
      * @return the id of the player we have added
      */
     @PostMapping("/board/{boardId}/player")
-    public ResponseEntity<Integer> addPlayer(@PathVariable("boardId") int boardId, @RequestBody PlayerDto playerDto) throws ServiceException, MappingException, DaoException {
+    public ResponseEntity<String> addPlayer(@PathVariable("boardId") int boardId, @RequestBody PlayerDto playerDto) throws ServiceException, MappingException, DaoException {
         Board board = gameService.getBoard(boardId);
         if (board.getSpace(playerDto.getX(), playerDto.getY()).getPlayer() == null && board.getPlayersNumber() < 6) {
             for (int i = 0; i < board.getPlayersNumber(); i++) {
                 if (playerDto.getPlayerName().equalsIgnoreCase(board.getPlayer(i).getName())) {
-                    return new ResponseEntity<>(boardId, HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<String>("The name "+playerDto.getPlayerName()+" is in use. Please pick an unused name", HttpStatus.BAD_REQUEST);
                 }
                 else if (playerDto.getPlayerColor().equalsIgnoreCase(board.getPlayer(i).getColor())){
-                    return new ResponseEntity<>(boardId, HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<String>("The color "+playerDto.getPlayerColor()+" Please pick an unused color", HttpStatus.BAD_REQUEST);
                 }
             }
                 Player player = dtoMapper.convertToEntity(playerDto, board);
                 int playerId = gameService.addPlayer(boardId, player);
                 gameService.setCurrentPlayer(boardId, playerId);
                 gameService.moveCurrentPlayer(boardId, playerDto.getX(), playerDto.getY());
-                return new ResponseEntity<>(playerId, HttpStatus.CREATED);
+                return new ResponseEntity<String>("player " +playerId +" has been made", HttpStatus.CREATED);
             }
         else {
-            return new ResponseEntity<>(boardId, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("Space "+playerDto.getX()+", "+ playerDto.getY()+" is taken", HttpStatus.BAD_REQUEST);
         }
     }
 
